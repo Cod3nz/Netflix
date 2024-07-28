@@ -5,7 +5,7 @@
     <form method="get" action="/">
         <div class="form-group">
             <label for="search">Search</label>
-            <input type="text" id="search" name="q">
+            <input type="text" id="search" name="q" value="<%= q %>">
             <button type="submit">Search</button>
         </div>
     </form>
@@ -16,35 +16,36 @@
     <table class="series-table">
         <thead>
             <tr>
-                <th><a href="/?sortField=name&q=">Name</a></th>
+                <th><a href="/?sortField=name&q=<%= q %>">Name</a></th>
                 <th>Link</th>
-                <th><a href="/?sortField=summary&q=">Summary</a></th>
-                <th><a href="/?sortField=score&q=">Score</a></th>
-                <th><a href="/?sortField=category&q=">Category</a></th>
+                <th><a href="/?sortField=summary&q=<%= q %>">Summary</a></th>
+                <th><a href="/?sortField=score&q=<%= q %>">Score</a></th>
+                <th><a href="/?sortField=category&q=<%= q %>">Category</a></th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Dummy Series 1</td>
-                <td><a href="https://www.dummyseries1.com">https://www.dummyseries1.com</a></td>
-                <td>This is a dummy series 1</td>
-                <td>8.5</td>
-                <td>Action</td>
-            </tr>
-            <tr>
-                <td>Dummy Series 2</td>
-                <td><a href="https://www.dummyseries2.com">https://www.dummyseries2.com</a></td>
-                <td>This is a dummy series 2</td>
-                <td>7.5</td>
-                <td>Biography</td>
-            </tr>
-            <tr>
-                <td>Dummy Series 3</td>
-                <td><a href="https://www.dummyseries3.com">https://www.dummyseries3.com</a></td>
-                <td>This is a dummy series 3</td>
-                <td>6.5</td>
-                <td>Musical</td>
-            </tr>
+            <% for( let i=0; i < series.length; i++ ) { %>
+                <% const serie=series[i]; %>
+                    <tr>
+                        <td>
+                            <%= serie.name %>
+                        </td>
+                        <td>
+                            <a href="<%= serie.link %>">
+                                <%= serie.link %>
+                            </a>
+                        </td>
+                        <td>
+                            <%= serie.summary %>
+                        </td>
+                        <td>
+                            <%= serie.score %>
+                        </td>
+                        <td>
+                            <%= serie.category %>
+                        </td>
+                    </tr>
+                    <% } %>
         </tbody>
     </table>
     </form>

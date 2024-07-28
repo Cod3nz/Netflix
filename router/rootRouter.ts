@@ -1,16 +1,23 @@
 import express from "express";
 import { getSeries, getUser, getSeriesById, saveUser, createSeries } from "../database";
 import { User, Series } from "../types";
+import { loginMiddleware } from "../middleware/loginMiddleware";
 
 export default function rootRouter() {
     const router = express.Router();
 
+    router.use(loginMiddleware);
+
     router.get("/", async(req, res) => {
-        // TODO: Gebruik een query `q` om te zoeken naar series waarvan de query voorkomt in de naam van de serie.
-        // TODO: Gebruik een query `sortField` om te sorteren op een bepaald veld.
-        // TODO: Gebruik/maak hiervoor de nodige functies in de `database.ts` file. We gebruiken dus database filtering en sorting via mongodb, dus geen JavaScript filtering en sorting.
-        // TODO: Render de `index` view met de gevonden series, de zoekterm en de sorteerrichting.
-        res.render("index");
+        const q: string = `${req.query.q}`;
+        const sortField: string = `${req.query.sortField}`;
+        const series: Series[] = await getSeries(q, sortField, 1);
+
+        res.render("index", {
+            series: series,
+            q: q === "undefined" ? "" : q,
+            sortField: sortField
+        });
     });
 
     router.get("/create", (req, res) => {
@@ -36,14 +43,20 @@ export default function rootRouter() {
             "Family",
             "Western"
         ];
-        // TODO: Toon het formulier om een nieuwe serie toe te voegen via de `create` view.
-        // TODO: Gebruik de `categories` array om de mogelijke categorieën in een dropdown te tonen.
-        res.render("create");
+        res.render("create", {
+            categories: categories
+        });
     });
     
     router.post("/create", async(req, res) => {
-        // TODO: Haal de nodige gegevens op uit de body van de request
-        // TODO: Gebruik/maak hiervoor de nodige functies in de `database.ts` file.
+        const {name, link, summary, score, category} = req.body;
+        await createSeries({
+            name: name,
+            link: link,
+            summary: summary,
+            score: score,
+            category: category
+        })
         res.redirect("/");
     });
 

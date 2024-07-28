@@ -10,7 +10,6 @@ export default function loginRouter() {
     });
 
     router.post("/login", async(req, res) => {
-        // TODO: Implementeer de login functionaliteit. Als de gebruiker succesvol is ingelogd, moet de gebruiker worden doorgestuurd naar de homepagina. Als de gebruiker niet succesvol is ingelogd, moet de gebruiker worden doorgestuurd naar de login pagina met een foutmelding. Gebruik flash messages om de foutmelding door te geven.
         const email: string = req.body.email;
         const password: string = req.body.pasword;
         try {
@@ -25,7 +24,6 @@ export default function loginRouter() {
     });
 
     router.get("/logout", async (req, res) => {
-        // TODO: Implementeer de logout functionaliteit.
         req.session.destroy(() => {
             res.redirect("/login");
         })
