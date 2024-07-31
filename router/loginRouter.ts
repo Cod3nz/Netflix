@@ -15,7 +15,7 @@ export default function loginRouter() {
         try {
             let user: User = await login(email, password);
             delete user.password;
-            req.session.user = user;
+            req.session.user = user; // steek de user in de session
             res.redirect("/");
         } catch (e: any) {
             console.log(e);
@@ -24,8 +24,8 @@ export default function loginRouter() {
     });
 
     router.get("/logout", async (req, res) => {
-        req.session.destroy(() => {
-            res.redirect("/login");
+        req.session.destroy(() => { // verwijder de sessie bij het uitloggen
+            res.redirect("/login"); // gebruiker wordt doorgestuurd naar de login pagina na het uitloggen
         })
     });
 

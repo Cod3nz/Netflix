@@ -18,21 +18,21 @@ export const userCollection: Collection<User> = db.collection<User>("Users");
 async function seedDatabase() {
     try {
         if (await serieCollection.countDocuments() === 0) {
-            console.log("Database empty, injecting seed");
             const data = await fetch("https://raw.githubusercontent.com/similonap/json/master/netflix.json");
             const json = await data.json();
-            await serieCollection.insertMany(json);
+            await serieCollection.insertMany(json)
         }
-        if (await userCollection.countDocuments() === 0) {
-            const u1_mail = process.env.U1_EMAIL;
-            const u1_pass = process.env.U1_PASSW;
-            const u2_mail = process.env.U2_EMAIL;
-            const u2_pass = process.env.U2_PASSW;
+        if (await userCollection.countDocuments() > 0) {
+            return;
+        }
+        const u1_mail = process.env.U1_EMAIL
+        const u1_pass = process.env.U1_PASSW
+        const u2_mail = process.env.U2_EMAIL
+        const u2_pass = process.env.U2_PASSW
         if (!u1_mail || !u1_pass || !u2_mail || !u2_pass) {
-            throw new Error("Initial user env variables not set");
+            throw new Error("Initial user env variables not set")
         }
-        await userCollection.insertMany([{ email: u1_mail, password: await bcrypt.hash(u1_pass, saltRounds) }, { email: u2_mail, password: await bcrypt.hash(u2_pass, saltRounds) }]);
-        }
+        await userCollection.insertMany([{ email: u1_mail, password: await bcrypt.hash(u1_pass, saltRounds) }, { email: u2_mail, password: await bcrypt.hash(u2_pass, saltRounds) }])
     } catch (e: any) {
         console.log(e);
     }
@@ -67,20 +67,12 @@ export async function getUser(email: string) {
         return user; // This will be `null` if no user is found.
     } catch (e: any) {
         console.error("Error fetching user:", e);
-        throw e; // Rethrow the error or handle it as appropriate.
+        throw e;
     }
 }
 
 export async function createSeries(series: Series) {
     await serieCollection.insertOne(series);
-}
-
-export function getSeriesById() {
-    // TODO: ...
-}
-
-export function saveUser() {
-    // TODO: ...
 }
 
 export async function connect() {

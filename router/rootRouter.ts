@@ -1,5 +1,5 @@
 import express from "express";
-import { getSeries, getUser, getSeriesById, saveUser, createSeries } from "../database";
+import { getSeries, getUser, createSeries } from "../database";
 import { User, Series } from "../types";
 import { loginMiddleware } from "../middleware/loginMiddleware";
 
@@ -48,17 +48,16 @@ export default function rootRouter() {
         });
     });
     
-    router.post("/create", async(req, res) => {
-        const {name, link, summary, score, category} = req.body;
-        await createSeries({
-            name: name,
-            link: link,
-            summary: summary,
-            score: score,
-            category: category
-        })
-        res.redirect("/");
-    });
+    router.post("/create", async (req, res) => {
+        try {
+            const { name, link, summary, score, category } = req.body;
+            await createSeries({ name, link, summary, score, category });
+            res.redirect("/");
+        } catch (error) {
+            console.error("Error creating series:", error);
+            res.status(500).send("Internal Server Error");
+        }
+    });    
 
     return router;
 }
